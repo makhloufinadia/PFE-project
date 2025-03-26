@@ -1,16 +1,16 @@
 <?php
 require('config.php');
-require('classes/bootstrap.php');
-require('classes/controller.php');
-require('classes/Model.php');
+require('Classes/bootstrap.php');
+require('Classes/controller.php');
+require('Classes/Model.php');
 
-require('controller/home.php');
-require('controller/shares.php');
-require('controller/users.php');
+require('controllers/home.php');
+require('controllers/shares.php');
+require('controllers/users.php');
 
-require('Model/home.php');
-require('Model/share.php');
-require('Model/user.php');
+require('models/home.php');
+require('models/share.php');
+require('models/user.php');
 
 $bootstrap = new Bootstrap($_GET);
 $controller = $bootstrap->createcontroller();
