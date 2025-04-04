@@ -1,29 +1,45 @@
 <?php
-class Bootstrap {
-    private $controller;
-    private $action;
-    private $request;
+class Bootstrap{
+	private $controller;
+	private $action;
+	private $request;
 
-    public function __construct($request){
-        $this->request = $request;
-        $this->action = $this->request['action'] ?? 'index';
-        $this->controller = ucfirst($this->request['controller'] ?? 'home').'Controller';
-    }
+	public function __construct($request){
+		$this->request = $request;
+		if($this->request['controller'] == ""){
+			$this->controller = 'home';
+		} else {
+			$this->controller = $this->request['controller'];
+		}
+		if($this->request['action'] == ""){
+			$this->action = 'index';
+		} else {
+			$this->action = $this->request['action'];
+		}
+	}
 
-    public function createController(){
-        // Debug: Liste toutes les classes chargées
-        print_r(get_declared_classes());
-        
-        if(class_exists($this->controller)){
-            $parents = class_parents($this->controller);
-            if(in_array("Controller", $parents)){
-                if(method_exists($this->controller, $this->action)){
-                    return new $this->controller($this->action, $this->request);
-                }
-                die('Method '.$this->action.' not found in '.$this->controller);
-            }
-            die('Parent Controller not found for '.$this->controller);
-        }
-        die('Controller class does not exist: '.$this->controller);
-    }
+	public function createController(){
+		// Check Class
+		if(class_exists($this->controller)){
+			$parents = class_parents($this->controller);
+			// Check Extend
+			if(in_array("Controller", $parents)){
+				if(method_exists($this->controller, $this->action)){
+					return new $this->controller($this->action, $this->request);
+				} else {
+					// Method Does Not Exist
+					echo '<h1>Method does not exist</h1>';
+					return;
+				}
+			} else {
+				// Base Controller Does Not Exist
+				echo '<h1>Base controller not found</h1>';
+				return;
+			}
+		} else {
+			// Controller Class Does Not Exist
+			echo '<h1>Controller class does not exist</h1>';
+			return;
+		}
+	}
 }

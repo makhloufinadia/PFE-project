@@ -1,33 +1,25 @@
 <?php
-// Debug
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// Start Session
+session_start();
 
+// Include Config
 require('config.php');
 
-// Autoloader ultime
-spl_autoload_register(function($class){
-    $classMap = [
-        'classes/' => ['Bootstrap', 'Controller', 'Model'],
-        'controllers/' => ['HomeController', 'SharesController', 'UsersController'],
-        'models/' => ['HomeModel', 'ShareModel', 'UserModel']
-    ];
-    
-    foreach($classMap as $path => $classes){
-        if(in_array($class, $classes)){
-            $file = $path.$class.'.php';
-            if(file_exists($file)){
-                require $file;
-                return;
-            }
-        }
-    }
-    
-    die("Class not found: ".$class);
-});
+require('classes/Messages.php');
+require('classes/Bootstrap.php');
+require('classes/Controller.php');
+require('classes/Model.php');
+
+require('controllers/home.php');
+require('controllers/shares.php');
+require('controllers/users.php');
+
+require('models/home.php');
+require('models/share.php');
+require('models/user.php');
 
 $bootstrap = new Bootstrap($_GET);
 $controller = $bootstrap->createController();
 if($controller){
-    $controller->executeAction();
+	$controller->executeAction();
 }
